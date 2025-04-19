@@ -4,6 +4,8 @@ An interactive web application for calculating various cosmological distances an
 
 Intended for students, amateur astronomers, educators, and anyone interested in cosmology.
 
+**➡️ Try the live application here: [https://advanced-redshift-calculator.streamlit.app/](https://advanced-redshift-calculator.streamlit.app/)**
+
 ## ✨ Features
 
 * Calculations based on the **ΛCDM model**.
@@ -52,7 +54,7 @@ Ensure you have Python 3.9 or higher installed.
 
 ## ▶️ Usage
 
-After installation, you can start the application:
+After installation, you can start the application locally:
 
 1.  Open your terminal or command prompt.
 2.  Navigate to the project directory.
