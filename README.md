@@ -69,6 +69,14 @@ After installation, you can start the application:
 * The cosmological parameters (H₀, Ωm, ΩΛ) can be adjusted directly in the application's sidebar. The default values are based on the Planck 2018 results.
 * The theme (light/dark mode) can usually be controlled via the Streamlit menu (≡ icon in the top right corner of the app) or through your browser/OS system settings.
 
+## ❤️ Support / Donation
+
+If you like this calculator and find it useful, please consider supporting its development:
+
+* [Donate via Ko-fi](https://ko-fi.com/advanceddsofinder)
+
+Thank you for your support!
+
 ## 🤝 Contributing & Bug Reports
 
 Bug reports and suggestions are welcome!
