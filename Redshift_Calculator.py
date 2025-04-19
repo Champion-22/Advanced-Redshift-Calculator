@@ -17,8 +17,7 @@ H0_DEFAULT = 67.4
 OMEGA_M_DEFAULT = 0.315
 OMEGA_LAMBDA_DEFAULT = 0.685
 
-# --- Übersetzungsdaten ---
-# Schlüssel sind die englischen Originaltexte (oder Bezeichner)
+# --- Übersetzungsdaten (Erweitert um Beispiele/Erklärungen) ---
 translations = {
     'DE': {
         "lang_select": "Sprache wählen",
@@ -57,7 +56,21 @@ translations = {
         "bug_report": "Fehler gefunden?",
         "bug_report_button": "Problem melden",
         "glossary": "Glossar",
-        # Glossarbegriffe werden separat übersetzt
+        # NEU: Beispiele/Erklärungen
+        "example_lookback_recent": "Vor Kurzem (kosmologisch gesehen).",
+        "example_lookback_humans": "Entwicklung des modernen Menschen.",
+        "example_lookback_dinos": "Zeitalter der Dinosaurier.",
+        "example_lookback_multicellular": "Entstehung komplexen mehrzelligen Lebens.",
+        "example_lookback_earth": "Entstehung der Erde und des Sonnensystems.",
+        "example_lookback_early_univ": "Frühes Universum, Bildung erster Sterne/Galaxien.",
+        "example_comoving_local": "Innerhalb unserer lokalen Galaxiengruppe.",
+        "example_comoving_virgo": "Entfernung zum Virgo-Galaxienhaufen.",
+        "example_comoving_coma": "Entfernung zum Coma-Galaxienhaufen.",
+        "example_comoving_lss": "Skala von Superhaufen und Filamenten.",
+        "example_comoving_quasars": "Distanz zu fernen Quasaren.",
+        "example_comoving_cmb": "Entfernung zum 'Rand' des beobachtbaren Universums (CMB).",
+        "explanation_luminosity": "Relevant für Helligkeit: Objekte erscheinen bei dieser Distanz so hell wie erwartet (wichtig für Standardkerzen wie Supernovae).",
+        "explanation_angular": "Relevant für Größe: Objekte haben bei dieser Distanz die erwartete scheinbare Größe (wichtig für Standardlineale wie BAO).",
     },
     'EN': {
         "lang_select": "Select Language",
@@ -96,6 +109,21 @@ translations = {
         "bug_report": "Found a bug?",
         "bug_report_button": "Report Issue",
         "glossary": "Glossary",
+        # NEW: Examples/Explanations
+        "example_lookback_recent": "Recently (cosmologically speaking).",
+        "example_lookback_humans": "Evolution of modern humans.",
+        "example_lookback_dinos": "Age of the dinosaurs.",
+        "example_lookback_multicellular": "Emergence of complex multicellular life.",
+        "example_lookback_earth": "Formation of the Earth and Solar System.",
+        "example_lookback_early_univ": "Early universe, formation of first stars/galaxies.",
+        "example_comoving_local": "Within our Local Group of galaxies.",
+        "example_comoving_virgo": "Distance to the Virgo Cluster.",
+        "example_comoving_coma": "Distance to the Coma Cluster.",
+        "example_comoving_lss": "Scale of superclusters and filaments.",
+        "example_comoving_quasars": "Distance to distant quasars.",
+        "example_comoving_cmb": "Distance to the 'edge' of the observable universe (CMB).",
+        "explanation_luminosity": "Relevant for brightness: Objects appear as bright as expected at this distance (important for standard candles like supernovae).",
+        "explanation_angular": "Relevant for size: Objects have the expected apparent size at this distance (important for standard rulers like BAO).",
     },
     'FR': {
         "lang_select": "Choisir la langue",
@@ -134,10 +162,25 @@ translations = {
         "bug_report": "Trouvé un bug ?",
         "bug_report_button": "Signaler un problème",
         "glossary": "Glossaire",
+        # NOUVEAU: Exemples/Explications
+        "example_lookback_recent": "Récemment (en termes cosmologiques).",
+        "example_lookback_humans": "Évolution des humains modernes.",
+        "example_lookback_dinos": "Ère des dinosaures.",
+        "example_lookback_multicellular": "Apparition de la vie multicellulaire complexe.",
+        "example_lookback_earth": "Formation de la Terre et du Système Solaire.",
+        "example_lookback_early_univ": "Univers primordial, formation des premières étoiles/galaxies.",
+        "example_comoving_local": "Au sein de notre Groupe Local de galaxies.",
+        "example_comoving_virgo": "Distance de l'amas de la Vierge.",
+        "example_comoving_coma": "Distance de l'amas de Coma.",
+        "example_comoving_lss": "Échelle des superamas et filaments.",
+        "example_comoving_quasars": "Distance des quasars lointains.",
+        "example_comoving_cmb": "Distance du 'bord' de l'univers observable (FDC).",
+        "explanation_luminosity": "Pertinent pour la luminosité : les objets apparaissent aussi brillants que prévu à cette distance (important pour les chandelles standard comme les supernovae).",
+        "explanation_angular": "Pertinent pour la taille : les objets ont la taille apparente attendue à cette distance (important pour les règles standard comme les BAO).",
     }
 }
 
-# --- Glossar Daten ---
+# --- Glossar Daten (unverändert) ---
 glossary_data = {
     'DE': {
         "Rotverschiebung (z)": "Ein Maß dafür, wie stark sich das Licht von entfernten Objekten aufgrund der Expansion des Universums zum roten Ende des Spektrums verschoben hat. Höhere z-Werte bedeuten größere Entfernungen und frühere Zeiten im Universum.",
@@ -177,6 +220,7 @@ glossary_data = {
     }
 }
 
+
 # --- Hilfsfunktionen für Integration & Berechnung (unverändert) ---
 def hubble_parameter_inv_integrand(z, omega_m, omega_lambda):
   epsilon = 1e-15
@@ -199,27 +243,17 @@ def lookback_time_integrand(z, omega_m, omega_lambda):
 @st.cache_data # Ergebnisse cachen für gleiche Eingaben
 def calculate_lcdm_distances(redshift, h0, omega_m, omega_lambda):
   """Berechnet Distanzen & Zeit, gibt Dict zurück."""
-  # Eingabevalidierung
   if not isinstance(redshift, (int, float)) or \
      not isinstance(h0, (int, float)) or \
      not isinstance(omega_m, (int, float)) or \
      not isinstance(omega_lambda, (int, float)):
-       return {'error_msg': "error_invalid_input"} # Schlüssel für Übersetzung verwenden
-
+       return {'error_msg': "error_invalid_input"}
   if redshift < 0:
-     return {
-        'comoving_mpc': 0.0, 'luminosity_mpc': 0.0, 'ang_diam_mpc': 0.0, 'lookback_gyr': 0.0,
-        'error_msg': "warn_blueshift" # Schlüssel für Übersetzung
-    }
+     return {'comoving_mpc': 0.0, 'luminosity_mpc': 0.0, 'ang_diam_mpc': 0.0, 'lookback_gyr': 0.0, 'error_msg': "warn_blueshift"}
   if math.isclose(redshift, 0):
-      return {
-        'comoving_mpc': 0.0, 'luminosity_mpc': 0.0, 'ang_diam_mpc': 0.0, 'lookback_gyr': 0.0,
-        'error_msg': None
-    }
-  if h0 <= 0:
-    return {'error_msg': "error_h0_positive"} # Schlüssel
-  if omega_m < 0 or omega_lambda < 0:
-      return {'error_msg': "error_omega_negative"} # Schlüssel
+      return {'comoving_mpc': 0.0, 'luminosity_mpc': 0.0, 'ang_diam_mpc': 0.0, 'lookback_gyr': 0.0, 'error_msg': None}
+  if h0 <= 0: return {'error_msg': "error_h0_positive"}
+  if omega_m < 0 or omega_lambda < 0: return {'error_msg': "error_omega_negative"}
 
   dh = C_KM_PER_S / h0
   try:
@@ -235,18 +269,16 @@ def calculate_lcdm_distances(redshift, h0, omega_m, omega_lambda):
     warning_msg_args = {}
     integration_warning_threshold = 1e-5
     if err_dc > integration_warning_threshold or err_lt > integration_warning_threshold:
-       warning_msg_key = "warn_integration_accuracy" # Schlüssel
+       warning_msg_key = "warn_integration_accuracy"
        warning_msg_args = {'err_dc': err_dc, 'err_lt': err_lt}
 
-    return {
-        'comoving_mpc': comoving_distance_mpc, 'luminosity_mpc': luminosity_distance_mpc,
-        'ang_diam_mpc': angular_diameter_distance_mpc, 'lookback_gyr': lookback_time_gyr,
-        'error_msg': None, 'integration_warning_key': warning_msg_key, 'integration_warning_args': warning_msg_args
-    }
-  except ImportError: return {'error_msg': "error_dep_scipy"} # Schlüssel
+    return {'comoving_mpc': comoving_distance_mpc, 'luminosity_mpc': luminosity_distance_mpc,
+            'ang_diam_mpc': angular_diameter_distance_mpc, 'lookback_gyr': lookback_time_gyr,
+            'error_msg': None, 'integration_warning_key': warning_msg_key, 'integration_warning_args': warning_msg_args}
+  except ImportError: return {'error_msg': "error_dep_scipy"}
   except Exception as e:
         st.exception(e)
-        return {'error_msg': "error_calc_failed", 'error_args': {'e': e}} # Schlüssel + Argumente
+        return {'error_msg': "error_calc_failed", 'error_args': {'e': e}}
 
 # --- Einheitenumrechnungsfunktionen (unverändert) ---
 def convert_mpc_to_km(d): return d * KM_PER_MPC
@@ -268,114 +300,88 @@ def format_large_number(number):
         return formatted
     except (ValueError, TypeError): return str(number)
 
-# --- Übersetzungshelfer ---
-# Initialisiere Sprache im Session State, falls nicht vorhanden
-if 'lang' not in st.session_state:
-    st.session_state.lang = 'DE' # Standard auf Deutsch
-
-# Funktion zum Abrufen von Übersetzungen
+# --- Übersetzungshelfer (unverändert) ---
+if 'lang' not in st.session_state: st.session_state.lang = 'DE'
 def t(key, **kwargs):
-    """Holt die Übersetzung für einen Schlüssel in der aktuellen Sprache."""
     lang = st.session_state.lang
-    translation = translations.get(lang, translations['EN']) # Fallback auf Englisch
-    text = translation.get(key, key) # Fallback auf den Schlüssel selbst
-    # Argumente formatieren, falls vorhanden
-    try:
-        return text.format(**kwargs)
+    translation = translations.get(lang, translations['EN'])
+    text = translation.get(key, key)
+    try: return text.format(**kwargs)
     except KeyError as e:
         print(f"Warnung: Fehlender Formatierungsschlüssel {e} für Text '{key}' in Sprache {lang}")
-        return text # Gib den unformatierten Text zurück
+        return text
+
+# --- NEUE Hilfsfunktionen für Beispiele ---
+def get_lookback_comparison(gyr):
+    """Gibt einen Vergleich für die Rückblickzeit zurück (als Schlüssel)."""
+    if gyr < 0.001: return "example_lookback_recent"
+    if gyr < 0.05: return "example_lookback_humans"
+    if gyr < 0.3: return "example_lookback_dinos"
+    if gyr < 1.0: return "example_lookback_multicellular"
+    if gyr < 5.0: return "example_lookback_earth"
+    return "example_lookback_early_univ"
+
+def get_comoving_comparison(mpc):
+    """Gibt einen Vergleich für die mitbewegte Distanz zurück (als Schlüssel)."""
+    if mpc < 5: return "example_comoving_local"
+    if mpc < 50: return "example_comoving_virgo"
+    if mpc < 200: return "example_comoving_coma"
+    if mpc < 1000: return "example_comoving_lss"
+    if mpc < 8000: return "example_comoving_quasars"
+    return "example_comoving_cmb"
 
 # --- Streamlit UI Aufbau ---
-
-# Seitenkonfiguration (Titel ohne Icon)
 st.set_page_config(page_title="Advanced Redshift Calculator", layout="wide")
-
-# Haupttitel (nicht übersetzt)
 st.title("Advanced Redshift Calculator")
 
-# --- Sidebar ---
+# --- Sidebar (unverändert bis auf Tooltip für z) ---
 with st.sidebar:
     st.header(t("input_params"))
-
-    # Sprachauswahl oben in der Sidebar
-    selected_lang = st.selectbox(
-        label=t("lang_select"), # Übersetztes Label
-        options=['DE', 'EN', 'FR'],
-        index=['DE', 'EN', 'FR'].index(st.session_state.lang), # Aktuelle Sprache vorauswählen
-        key='lang_selector' # Eindeutiger Schlüssel
-    )
-    # Update session state wenn Auswahl geändert wird
+    selected_lang = st.selectbox(label=t("lang_select"), options=['DE', 'EN', 'FR'],
+                                 index=['DE', 'EN', 'FR'].index(st.session_state.lang), key='lang_selector')
     if selected_lang != st.session_state.lang:
         st.session_state.lang = selected_lang
-        st.rerun() # App neu laden, um alle Texte zu aktualisieren
+        st.rerun()
 
-    # Eingaben mit übersetzten Labels
-    z_input = st.number_input(
-        label=t("redshift_z"),
-        min_value=-0.99, # Physikalisches Limit nahe -1
-        value=0.03403,
-        step=0.1,
-        format="%.5f",
-        help="Geben Sie die kosmologische Rotverschiebung ein." # Tooltip
-    )
+    z_input = st.number_input(label=t("redshift_z"), min_value=-0.99, value=0.03403, step=0.1, format="%.5f",
+                              help=t('redshift_z_tooltip', default="Geben Sie die kosmologische Rotverschiebung ein.")) # Tooltip hinzugefügt
 
     st.markdown("---")
     st.subheader(t("cosmo_params"))
-    h0_input = st.number_input(
-        label=t("hubble_h0"),
-        min_value=1.0, value=H0_DEFAULT, step=0.1, format="%.1f"
-    )
-    omega_m_input = st.number_input(
-        label=t("omega_m"),
-        min_value=0.0, max_value=2.0, value=OMEGA_M_DEFAULT, step=0.01, format="%.3f"
-    )
-    omega_lambda_input = st.number_input(
-        label=t("omega_lambda"),
-        min_value=0.0, max_value=2.0, value=OMEGA_LAMBDA_DEFAULT, step=0.01, format="%.3f"
-    )
+    h0_input = st.number_input(label=t("hubble_h0"), min_value=1.0, value=H0_DEFAULT, step=0.1, format="%.1f")
+    omega_m_input = st.number_input(label=t("omega_m"), min_value=0.0, max_value=2.0, value=OMEGA_M_DEFAULT, step=0.01, format="%.3f")
+    omega_lambda_input = st.number_input(label=t("omega_lambda"), min_value=0.0, max_value=2.0, value=OMEGA_LAMBDA_DEFAULT, step=0.01, format="%.3f")
 
-    # Optional: Hinweis auf flaches Universum
     if not math.isclose(omega_m_input + omega_lambda_input, 1.0, abs_tol=1e-3):
         st.warning(t("flat_universe_warning"))
 
-    # Bug Report Button
     st.markdown("---")
     st.markdown(f"**{t('bug_report')}**")
     report_mail = "debrun2005@gmail.com"
     report_subject = "Bug Report: Advanced Redshift Calculator"
     report_body = f"Hallo,\n\nich habe einen Fehler im Advanced Redshift Calculator gefunden:\n\n[Bitte beschreiben Sie den Fehler hier]\n\nParameter:\nz={z_input}\nH0={h0_input}\nOmega_m={omega_m_input}\nOmega_Lambda={omega_lambda_input}\n\nDanke!"
-    # URL-Encoding für Mailto Body (vereinfacht)
     report_body_encoded = report_body.replace("\n", "%0A").replace(" ", "%20")
     st.link_button(t("bug_report_button"), f"mailto:{report_mail}?subject={report_subject}&body={report_body_encoded}")
 
-
 # --- Hauptbereich ---
-
-# Berechnung durchführen
 results = calculate_lcdm_distances(z_input, h0_input, omega_m_input, omega_lambda_input)
-
-# Ergebnisse anzeigen
 st.header(t("results_for", z=z_input))
 
-# Fehler oder Warnungen zuerst behandeln
 error_key = results.get('error_msg')
 if error_key:
     error_args = results.get('error_args', {})
-    error_text = t(error_key, **error_args) # Übersetzung holen
-    if "Warnung:" in error_text or "Warning:" in error_text or "Avertissement:" in error_text: # Prüfe übersetzten Text
+    error_text = t(error_key, **error_args)
+    # Verwende den englischen Text zur Überprüfung, da dieser der Schlüssel ist
+    if error_key == "warn_blueshift":
         st.warning(error_text)
     else:
         st.error(error_text)
-        # Bei echtem Fehler hier anhalten, außer bei Blueshift-Warnung
-        if error_key != "warn_blueshift":
-            st.stop()
+        if error_key != "warn_blueshift": st.stop()
 
-# Optionale Integrationswarnung anzeigen
 warning_key = results.get('integration_warning_key')
 if warning_key:
     warning_args = results.get('integration_warning_args', {})
-    st.info(t(warning_key, **warning_args)) # Übersetzung holen
+    st.info(t(warning_key, **warning_args))
 
 # Ergebnisse extrahieren (nach Fehlerprüfung)
 comoving_mpc = results['comoving_mpc']
@@ -393,20 +399,27 @@ comoving_au = convert_km_to_au(comoving_km)
 comoving_ls = convert_km_to_ls(comoving_km)
 comoving_km_ausgeschrieben = format_large_number(comoving_km)
 
-# Ergebnisse modern anzeigen (z.B. mit Metriken und Spalten)
+# --- Ergebnisse mit Beispielen anzeigen ---
 st.metric(label=t("lookback_time"), value=f"{lookback_gyr:.4f}", delta=t("unit_Gyr"))
-st.markdown("---")
+# NEU: Beispiel für Rückblickzeit
+lookback_example_key = get_lookback_comparison(lookback_gyr)
+st.caption(f"*{t(lookback_example_key)}*") # Kursiv als Beispiel markieren
 
+st.markdown("---")
 st.subheader(t("cosmo_distances"))
 
-col1, col2 = st.columns(2) # Spalten für bessere Darstellung
+col1, col2 = st.columns(2)
 
 with col1:
     st.markdown(t("comoving_distance_title"))
     st.text(f"  {comoving_mpc:,.4f} {t('unit_Mpc')}")
     st.text(f"  {comoving_gly:,.4f} {t('unit_Gly')}")
+    # NEU: Beispiel für Mitbewegte Distanz
+    comoving_example_key = get_comoving_comparison(comoving_mpc)
+    st.caption(f"*{t(comoving_example_key)}*") # Kursiv als Beispiel markieren
+
     st.text(f"  {comoving_km:,.3e} {t('unit_km_sci')}")
-    st.text(f"  {comoving_km_ausgeschrieben} {t('unit_km_full')}") # Angepasstes Label
+    st.text(f"  {comoving_km_ausgeschrieben} {t('unit_km_full')}")
     st.text(f"  {comoving_ly:,.3e} {t('unit_LJ')}")
     st.text(f"  {comoving_au:,.3e} {t('unit_AE')}")
     st.text(f"  {comoving_ls:,.3e} {t('unit_Ls')}")
@@ -415,29 +428,27 @@ with col2:
     st.markdown(t("luminosity_distance_title"))
     st.text(f"  {luminosity_mpc:,.4f} {t('unit_Mpc')}")
     st.text(f"  {luminosity_gly:,.4f} {t('unit_Gly')}")
+    # NEU: Erklärung für Leuchtkraftdistanz
+    st.caption(f"*{t('explanation_luminosity')}*")
 
-    st.markdown(t("angular_diameter_distance_title"), unsafe_allow_html=True) # Leerzeile einfügen
+    st.markdown(t("angular_diameter_distance_title"), unsafe_allow_html=True) # Markdown für Abstand
     st.text(f"  {ang_diam_mpc:,.4f} {t('unit_Mpc')}")
     st.text(f"  {ang_diam_gly:,.4f} {t('unit_Gly')}")
-
+    # NEU: Erklärung für Winkeldurchmesserdistanz
+    st.caption(f"*{t('explanation_angular')}*")
 
 st.markdown("---")
 
-# Glossar
+# Glossar (unverändert)
 with st.expander(t("glossary")):
-    current_glossary = glossary_data.get(st.session_state.lang, glossary_data['EN']) # Fallback EN
+    current_glossary = glossary_data.get(st.session_state.lang, glossary_data['EN'])
     for term, definition in current_glossary.items():
         st.markdown(f"**{term}:** {definition}")
 
 st.markdown("---")
 
-# Spendenlink
+# Spendenlink (unverändert)
 st.markdown(f"{t('donate_text')}")
 st.link_button(t("donate_button"), "https://ko-fi.com/advanceddsofinder")
-
-
 st.caption(t("calculation_note"))
-
-# Hinweis zum Theme (kann nicht direkt aus dem Skript erzwungen werden)
-# st.info("Hinweis: Das helle/dunkle Theme passt sich normalerweise an Ihre Browsereinstellungen an oder kann im Streamlit-Menü (oben rechts) geändert werden.")
 
