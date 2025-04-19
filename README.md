@@ -94,3 +94,10 @@ Bug reports and suggestions are welcome!
 * Uses the libraries [Streamlit](https://streamlit.io/), [NumPy](https://numpy.org/), and [SciPy](https://scipy.org/).
 * Default parameters are based on the [Planck 2018 results](https://www.cosmos.esa.int/web/planck/publications).
 
+---
+
+## License
+
+No license specified.
+
+---
