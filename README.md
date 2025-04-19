@@ -1,4 +1,5 @@
 <img width="120" alt="Main_Logo_transparent_schatten" src="https://github.com/user-attachments/assets/7d7eae98-a298-4cf9-bdc0-cda1dda596af" />
+
 # Advanced Redshift Calculator
 
 An interactive web application for calculating various cosmological distances and the lookback time based on redshift (z) using the standard ΛCDM model. Built with Streamlit.
